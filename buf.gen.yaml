@@ -1,0 +1,20 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: github.com/aceteam-ai/fabric-protocol/gen/go
+plugins:
+  # Go -> consumed by citadel-cli
+  - remote: buf.build/protocolbuffers/go
+    out: gen/go
+    opt: paths=source_relative
+  # Python -> consumed by aceteam python-backend worker
+  - remote: buf.build/protocolbuffers/python
+    out: gen/python
+  - remote: buf.build/protocolbuffers/pyi
+    out: gen/python
+  # TypeScript (protobuf-es) -> consumed by aceteam Next.js
+  - remote: buf.build/bufbuild/es
+    out: gen/ts
+    opt: target=ts

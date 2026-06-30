@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+// Fabric node reconcile contract (citadel#353).
+// Node<->control-plane desired/actual module state.
+//
+// Versioning is tied to FabricProtocolVersion (citadel-cli
+// internal/protocol/protocol.go, aceteam #363) -- bump that constant on any
+// breaking change here; `protocol_version` on the envelopes carries it on the wire.
+package aceteam.fabric.v1;
+
+option go_package = "github.com/aceteam-ai/fabric-protocol/gen/go/aceteam/fabric/v1;fabricv1";
+
+import "google/protobuf/timestamp.proto";
+
+// ─────────────────────────── Desired state ───────────────────────────
+// Control plane -> node. "What this node SHOULD be running."
+// Delivered pull (GET) + push-nudge (a `reconcile` job on the node queue).
+
+enum ModuleStatus {
+  MODULE_STATUS_UNSPECIFIED = 0;
+  MODULE_STATUS_RUNNING = 1; // installed + started
+  MODULE_STATUS_STOPPED = 2; // installed, not running
+  MODULE_STATUS_ABSENT  = 3; // uninstalled / removed
+}
+
+message DesiredModule {
+  // Catalog source ref resolved by the #350 path, e.g. "official:postgres@v2"
+  // or "<source-name>:<service>". The node resolves this to a manifest.
+  string source = 1;
+  // Hash of the resolved config the server intends -- node compares against
+  // its applied config_ref to detect drift without shipping full config back.
+  string config_ref = 2;
+  map<string, string> config = 3; // config overrides (key=value)
+  ModuleStatus desired_status = 4;
+  // Privileged install is gated: honored only if a signed grant is present
+  // (ties into the #4313 signed-capability epic). Default false.
+  bool allow_privileged = 5;
+}
+
+message DesiredState {
+  uint32 protocol_version = 1;
+  string node_id = 2;   // Headscale hostname; advisory only (server is authority)
+  string revision = 3;  // server-assigned, monotonic; node echoes it in ActualState
+  repeated DesiredModule modules = 4;
+  google.protobuf.Timestamp issued_at = 5;
+}
+
+// ─────────────────────────── Actual state ────────────────────────────
+// Node -> control plane. "What this node IS running." Report-only in v1;
+// converge (apply DesiredState) is v2.
+
+enum ModuleHealth {
+  MODULE_HEALTH_UNSPECIFIED = 0;
+  MODULE_HEALTH_HEALTHY   = 1;
+  MODULE_HEALTH_STARTING  = 2;
+  MODULE_HEALTH_UNHEALTHY = 3;
+  MODULE_HEALTH_ERROR     = 4; // converge/install failed -- see `error`
+}
+
+message ActualModule {
+  string source = 1;
+  string installed_version = 2; // resolved version/ref actually installed
+  string image_digest = 3;      // sha256:... of the running image
+  ModuleStatus status = 4;      // observed status
+  ModuleHealth health = 5;
+  string config_ref = 6;        // applied config hash; != desired => drift
+  // Per-module failure isolation: one bad module reports ERROR here without
+  // blocking the rest of the report.
+  string error = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message ActualState {
+  uint32 protocol_version = 1;
+  // Headscale hostname = the auth key. Server re-derives org from Headscale and
+  // IGNORES any org claim in the payload (same spoofing defense as #4139).
+  string node_id = 2;
+  // The DesiredState.revision this report reflects ("" if node has none yet).
+  string applied_revision = 3;
+  string agent_version = 4; // citadel-cli version
+  repeated ActualModule modules = 5;
+  google.protobuf.Timestamp reported_at = 6;
+}
