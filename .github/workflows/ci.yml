@@ -45,7 +45,11 @@ jobs:
       - name: Breaking-change guard
         # Skip on the push-to-main event (no baseline to compare against itself).
         if: github.event_name == 'pull_request'
-        run: buf breaking --against '.git#branch=main'
+        # actions/checkout leaves a detached HEAD with only origin/main; the
+        # `.git#branch=main` input resolves a *local* branch ref, so fetch one.
+        run: |
+          git fetch --no-tags origin +refs/heads/main:refs/heads/main
+          buf breaking --against '.git#branch=main'
 
       - name: Go build
         run: go build ./...
