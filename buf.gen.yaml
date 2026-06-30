@@ -5,16 +5,20 @@ managed:
     - file_option: go_package_prefix
       value: github.com/aceteam-ai/fabric-protocol/gen/go
 plugins:
+  # Versions are pinned for deterministic codegen: CI gates on `buf generate` +
+  # `git diff --exit-code`, which only holds if generation is reproducible.
+  # Bumping a plugin is an intentional commit that regenerates gen/.
+  #
   # Go -> consumed by citadel-cli
-  - remote: buf.build/protocolbuffers/go
+  - remote: buf.build/protocolbuffers/go:v1.36.11
     out: gen/go
     opt: paths=source_relative
   # Python -> consumed by aceteam python-backend worker
-  - remote: buf.build/protocolbuffers/python
+  - remote: buf.build/protocolbuffers/python:v35.1
     out: gen/python
-  - remote: buf.build/protocolbuffers/pyi
+  - remote: buf.build/protocolbuffers/pyi:v35.1
     out: gen/python
   # TypeScript (protobuf-es) -> consumed by aceteam Next.js
-  - remote: buf.build/bufbuild/es
+  - remote: buf.build/bufbuild/es:v2.12.1
     out: gen/ts
     opt: target=ts

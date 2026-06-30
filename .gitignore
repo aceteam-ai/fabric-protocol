@@ -1,0 +1,9 @@
+# Python bytecode (generated stubs are committed; their compiled caches are not)
+__pycache__/
+*.py[cod]
+
+# Node
+node_modules/
+
+# buf local plugin cache / build output
+*.bsr

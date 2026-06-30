@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  proto:
+    # Org self-hosted ARC runners (see aceteam workspace CLAUDE.md).
+    runs-on: arc-runner-set
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # buf breaking resolves the `main` baseline from local git history,
+          # so we need the full history, not a shallow single-branch clone.
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+
+      - uses: bufbuild/buf-setup-action@v1.50.0
+        with:
+          # Pin buf itself for reproducible lint/format/codegen across runs.
+          version: 1.71.0
+
+      - name: Lint
+        run: buf lint
+
+      - name: Format check
+        run: buf format --diff --exit-code
+
+      - name: Generate is in sync
+        # Regenerate from the pinned remote plugins and prove the committed
+        # gen/ tree matches byte-for-byte. Fails if someone edited a .proto
+        # without re-running `buf generate`.
+        run: |
+          buf generate
+          git diff --exit-code
+
+      - name: Breaking-change guard
+        # Skip on the push-to-main event (no baseline to compare against itself).
+        if: github.event_name == 'pull_request'
+        # actions/checkout leaves a detached HEAD with only origin/main; the
+        # `.git#branch=main` input resolves a *local* branch ref, so fetch one.
+        run: |
+          git fetch --no-tags origin +refs/heads/main:refs/heads/main
+          buf breaking --against '.git#branch=main'
+
+      - name: Go build
+        run: go build ./...
