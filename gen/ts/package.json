@@ -1,0 +1,15 @@
+{
+  "name": "@aceteam/fabric-protocol",
+  "version": "0.0.0",
+  "description": "Generated TypeScript types for the AceTeam Sovereign Compute Fabric wire contracts.",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./aceteam/fabric/v1/node_state_pb": "./aceteam/fabric/v1/node_state_pb.ts",
+    "./aceteam/fabric/v1/node_activity_pb": "./aceteam/fabric/v1/node_activity_pb.ts"
+  },
+  "peerDependencies": {
+    "@bufbuild/protobuf": "^2.12.1"
+  }
+}
