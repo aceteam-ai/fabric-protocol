@@ -8,9 +8,9 @@ syntax = "proto3";
 // breaking change here; `protocol_version` on the envelopes carries it on the wire.
 package aceteam.fabric.v1;
 
-option go_package = "github.com/aceteam-ai/fabric-protocol/gen/go/aceteam/fabric/v1;fabricv1";
-
 import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/aceteam-ai/fabric-protocol/gen/go/aceteam/fabric/v1;fabricv1";
 
 // ─────────────────────────── Desired state ───────────────────────────
 // Control plane -> node. "What this node SHOULD be running."
@@ -20,7 +20,7 @@ enum ModuleStatus {
   MODULE_STATUS_UNSPECIFIED = 0;
   MODULE_STATUS_RUNNING = 1; // installed + started
   MODULE_STATUS_STOPPED = 2; // installed, not running
-  MODULE_STATUS_ABSENT  = 3; // uninstalled / removed
+  MODULE_STATUS_ABSENT = 3; // uninstalled / removed
 }
 
 message DesiredModule {
@@ -39,8 +39,8 @@ message DesiredModule {
 
 message DesiredState {
   uint32 protocol_version = 1;
-  string node_id = 2;   // Headscale hostname; advisory only (server is authority)
-  string revision = 3;  // server-assigned, monotonic; node echoes it in ActualState
+  string node_id = 2; // Headscale hostname; advisory only (server is authority)
+  string revision = 3; // server-assigned, monotonic; node echoes it in ActualState
   repeated DesiredModule modules = 4;
   google.protobuf.Timestamp issued_at = 5;
 }
@@ -51,19 +51,19 @@ message DesiredState {
 
 enum ModuleHealth {
   MODULE_HEALTH_UNSPECIFIED = 0;
-  MODULE_HEALTH_HEALTHY   = 1;
-  MODULE_HEALTH_STARTING  = 2;
+  MODULE_HEALTH_HEALTHY = 1;
+  MODULE_HEALTH_STARTING = 2;
   MODULE_HEALTH_UNHEALTHY = 3;
-  MODULE_HEALTH_ERROR     = 4; // converge/install failed -- see `error`
+  MODULE_HEALTH_ERROR = 4; // converge/install failed -- see `error`
 }
 
 message ActualModule {
   string source = 1;
   string installed_version = 2; // resolved version/ref actually installed
-  string image_digest = 3;      // sha256:... of the running image
-  ModuleStatus status = 4;      // observed status
+  string image_digest = 3; // sha256:... of the running image
+  ModuleStatus status = 4; // observed status
   ModuleHealth health = 5;
-  string config_ref = 6;        // applied config hash; != desired => drift
+  string config_ref = 6; // applied config hash; != desired => drift
   // Per-module failure isolation: one bad module reports ERROR here without
   // blocking the rest of the report.
   string error = 7;
