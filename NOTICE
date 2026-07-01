@@ -1,0 +1,9 @@
+AceTeam Fabric Protocol
+Copyright 2026 AceTeam.ai (Adanomad Consulting Inc.)
+
+This product includes software developed at AceTeam.ai for the Sovereign
+Compute Fabric. Canonical wire contracts for the node <-> control-plane
+boundary.
+
+If you adopt or redistribute this protocol, please retain this NOTICE and
+credit AceTeam.ai (https://aceteam.ai).
