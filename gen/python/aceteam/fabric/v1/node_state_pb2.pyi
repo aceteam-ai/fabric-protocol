@@ -69,8 +69,28 @@ class DesiredState(_message.Message):
     issued_at: _timestamp_pb2.Timestamp
     def __init__(self, protocol_version: _Optional[int] = ..., node_id: _Optional[str] = ..., revision: _Optional[str] = ..., modules: _Optional[_Iterable[_Union[DesiredModule, _Mapping]]] = ..., issued_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
+class ModuleEndpoint(_message.Message):
+    __slots__ = ("name", "kind", "scheme", "port", "path", "health", "health_path", "admin_key_fingerprint")
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    SCHEME_FIELD_NUMBER: _ClassVar[int]
+    PORT_FIELD_NUMBER: _ClassVar[int]
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    HEALTH_FIELD_NUMBER: _ClassVar[int]
+    HEALTH_PATH_FIELD_NUMBER: _ClassVar[int]
+    ADMIN_KEY_FINGERPRINT_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    kind: str
+    scheme: str
+    port: int
+    path: str
+    health: ModuleHealth
+    health_path: str
+    admin_key_fingerprint: str
+    def __init__(self, name: _Optional[str] = ..., kind: _Optional[str] = ..., scheme: _Optional[str] = ..., port: _Optional[int] = ..., path: _Optional[str] = ..., health: _Optional[_Union[ModuleHealth, str]] = ..., health_path: _Optional[str] = ..., admin_key_fingerprint: _Optional[str] = ...) -> None: ...
+
 class ActualModule(_message.Message):
-    __slots__ = ("source", "installed_version", "image_digest", "status", "health", "config_ref", "error", "updated_at")
+    __slots__ = ("source", "installed_version", "image_digest", "status", "health", "config_ref", "error", "updated_at", "endpoints")
     SOURCE_FIELD_NUMBER: _ClassVar[int]
     INSTALLED_VERSION_FIELD_NUMBER: _ClassVar[int]
     IMAGE_DIGEST_FIELD_NUMBER: _ClassVar[int]
@@ -79,6 +99,7 @@ class ActualModule(_message.Message):
     CONFIG_REF_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINTS_FIELD_NUMBER: _ClassVar[int]
     source: str
     installed_version: str
     image_digest: str
@@ -87,7 +108,8 @@ class ActualModule(_message.Message):
     config_ref: str
     error: str
     updated_at: _timestamp_pb2.Timestamp
-    def __init__(self, source: _Optional[str] = ..., installed_version: _Optional[str] = ..., image_digest: _Optional[str] = ..., status: _Optional[_Union[ModuleStatus, str]] = ..., health: _Optional[_Union[ModuleHealth, str]] = ..., config_ref: _Optional[str] = ..., error: _Optional[str] = ..., updated_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    endpoints: _containers.RepeatedCompositeFieldContainer[ModuleEndpoint]
+    def __init__(self, source: _Optional[str] = ..., installed_version: _Optional[str] = ..., image_digest: _Optional[str] = ..., status: _Optional[_Union[ModuleStatus, str]] = ..., health: _Optional[_Union[ModuleHealth, str]] = ..., config_ref: _Optional[str] = ..., error: _Optional[str] = ..., updated_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., endpoints: _Optional[_Iterable[_Union[ModuleEndpoint, _Mapping]]] = ...) -> None: ...
 
 class ActualState(_message.Message):
     __slots__ = ("protocol_version", "node_id", "applied_revision", "agent_version", "modules", "reported_at")

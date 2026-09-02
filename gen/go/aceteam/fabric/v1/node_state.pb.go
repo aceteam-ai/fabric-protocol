@@ -294,6 +294,121 @@ func (x *DesiredState) GetIssuedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// ModuleEndpoint is a network surface a module exposes on this node (citadel#624
+// Phase A) -- e.g. a gateway route to a bridge's REST control plane. Additive,
+// proto3-optional-free: every field defaults harmlessly to its zero value, so
+// this is a backward-compatible wire addition (no FabricProtocolVersion bump).
+//
+// Deliberately carries NO secret material. `admin_key_fingerprint` is a
+// one-way digest for change-over-time drift detection only -- see its field
+// comment; the control plane never receives (and cannot recover) the key
+// itself from this message.
+type ModuleEndpoint struct {
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Name       string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                                          // endpoint identity within the module, e.g. "admin"
+	Kind       string                 `protobuf:"bytes,2,opt,name=kind,proto3" json:"kind,omitempty"`                                          // e.g. "rest", "grpc" -- informational, not enforced
+	Scheme     string                 `protobuf:"bytes,3,opt,name=scheme,proto3" json:"scheme,omitempty"`                                      // "http" | "https"
+	Port       uint32                 `protobuf:"varint,4,opt,name=port,proto3" json:"port,omitempty"`                                         // 0 = declared but not yet deployed (no live upstream yet)
+	Path       string                 `protobuf:"bytes,5,opt,name=path,proto3" json:"path,omitempty"`                                          // route path prefix the endpoint is reachable under
+	Health     ModuleHealth           `protobuf:"varint,6,opt,name=health,proto3,enum=aceteam.fabric.v1.ModuleHealth" json:"health,omitempty"` // observed health of THIS endpoint specifically
+	HealthPath string                 `protobuf:"bytes,7,opt,name=health_path,json=healthPath,proto3" json:"health_path,omitempty"`            // path used to probe health, if any
+	// admin_key_fingerprint is `sha256:<first-16-hex-chars>` of SHA-256(admin
+	// key), or "" when no key is on disk. It is NEVER the hash of an empty
+	// string -- an absent key means an absent fingerprint. The control plane
+	// never learns the underlying key from this field (it is not sent anywhere
+	// else either), so this supports detecting THAT the key changed over time,
+	// not verifying it against a platform-held copy.
+	AdminKeyFingerprint string `protobuf:"bytes,8,opt,name=admin_key_fingerprint,json=adminKeyFingerprint,proto3" json:"admin_key_fingerprint,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *ModuleEndpoint) Reset() {
+	*x = ModuleEndpoint{}
+	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModuleEndpoint) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModuleEndpoint) ProtoMessage() {}
+
+func (x *ModuleEndpoint) ProtoReflect() protoreflect.Message {
+	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModuleEndpoint.ProtoReflect.Descriptor instead.
+func (*ModuleEndpoint) Descriptor() ([]byte, []int) {
+	return file_aceteam_fabric_v1_node_state_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ModuleEndpoint) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ModuleEndpoint) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *ModuleEndpoint) GetScheme() string {
+	if x != nil {
+		return x.Scheme
+	}
+	return ""
+}
+
+func (x *ModuleEndpoint) GetPort() uint32 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
+}
+
+func (x *ModuleEndpoint) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *ModuleEndpoint) GetHealth() ModuleHealth {
+	if x != nil {
+		return x.Health
+	}
+	return ModuleHealth_MODULE_HEALTH_UNSPECIFIED
+}
+
+func (x *ModuleEndpoint) GetHealthPath() string {
+	if x != nil {
+		return x.HealthPath
+	}
+	return ""
+}
+
+func (x *ModuleEndpoint) GetAdminKeyFingerprint() string {
+	if x != nil {
+		return x.AdminKeyFingerprint
+	}
+	return ""
+}
+
 type ActualModule struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	Source           string                 `protobuf:"bytes,1,opt,name=source,proto3" json:"source,omitempty"`
@@ -304,15 +419,21 @@ type ActualModule struct {
 	ConfigRef        string                 `protobuf:"bytes,6,opt,name=config_ref,json=configRef,proto3" json:"config_ref,omitempty"` // applied config hash; != desired => drift
 	// Per-module failure isolation: one bad module reports ERROR here without
 	// blocking the rest of the report.
-	Error         string                 `protobuf:"bytes,7,opt,name=error,proto3" json:"error,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Error     string                 `protobuf:"bytes,7,opt,name=error,proto3" json:"error,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// endpoints lists this module's exposed network surfaces (citadel#624 Phase
+	// A). Empty for a module with no declared endpoints (the common case
+	// today). A module with no lockfile entry (e.g. a bridge deployed outside
+	// the module system) can still appear here as a synthetic row keyed by
+	// `source` purely to carry its endpoints -- see the citadel-cli emitter.
+	Endpoints     []*ModuleEndpoint `protobuf:"bytes,9,rep,name=endpoints,proto3" json:"endpoints,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ActualModule) Reset() {
 	*x = ActualModule{}
-	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[2]
+	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -324,7 +445,7 @@ func (x *ActualModule) String() string {
 func (*ActualModule) ProtoMessage() {}
 
 func (x *ActualModule) ProtoReflect() protoreflect.Message {
-	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[2]
+	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -337,7 +458,7 @@ func (x *ActualModule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ActualModule.ProtoReflect.Descriptor instead.
 func (*ActualModule) Descriptor() ([]byte, []int) {
-	return file_aceteam_fabric_v1_node_state_proto_rawDescGZIP(), []int{2}
+	return file_aceteam_fabric_v1_node_state_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ActualModule) GetSource() string {
@@ -396,6 +517,13 @@ func (x *ActualModule) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *ActualModule) GetEndpoints() []*ModuleEndpoint {
+	if x != nil {
+		return x.Endpoints
+	}
+	return nil
+}
+
 type ActualState struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
@@ -413,7 +541,7 @@ type ActualState struct {
 
 func (x *ActualState) Reset() {
 	*x = ActualState{}
-	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[3]
+	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -425,7 +553,7 @@ func (x *ActualState) String() string {
 func (*ActualState) ProtoMessage() {}
 
 func (x *ActualState) ProtoReflect() protoreflect.Message {
-	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[3]
+	mi := &file_aceteam_fabric_v1_node_state_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -438,7 +566,7 @@ func (x *ActualState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ActualState.ProtoReflect.Descriptor instead.
 func (*ActualState) Descriptor() ([]byte, []int) {
-	return file_aceteam_fabric_v1_node_state_proto_rawDescGZIP(), []int{3}
+	return file_aceteam_fabric_v1_node_state_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ActualState) GetProtocolVersion() uint32 {
@@ -503,7 +631,17 @@ const file_aceteam_fabric_v1_node_state_proto_rawDesc = "" +
 	"\anode_id\x18\x02 \x01(\tR\x06nodeId\x12\x1a\n" +
 	"\brevision\x18\x03 \x01(\tR\brevision\x12:\n" +
 	"\amodules\x18\x04 \x03(\v2 .aceteam.fabric.v1.DesiredModuleR\amodules\x127\n" +
-	"\tissued_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\bissuedAt\"\xd8\x02\n" +
+	"\tissued_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\bissuedAt\"\x86\x02\n" +
+	"\x0eModuleEndpoint\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
+	"\x04kind\x18\x02 \x01(\tR\x04kind\x12\x16\n" +
+	"\x06scheme\x18\x03 \x01(\tR\x06scheme\x12\x12\n" +
+	"\x04port\x18\x04 \x01(\rR\x04port\x12\x12\n" +
+	"\x04path\x18\x05 \x01(\tR\x04path\x127\n" +
+	"\x06health\x18\x06 \x01(\x0e2\x1f.aceteam.fabric.v1.ModuleHealthR\x06health\x12\x1f\n" +
+	"\vhealth_path\x18\a \x01(\tR\n" +
+	"healthPath\x122\n" +
+	"\x15admin_key_fingerprint\x18\b \x01(\tR\x13adminKeyFingerprint\"\x99\x03\n" +
 	"\fActualModule\x12\x16\n" +
 	"\x06source\x18\x01 \x01(\tR\x06source\x12+\n" +
 	"\x11installed_version\x18\x02 \x01(\tR\x10installedVersion\x12!\n" +
@@ -514,7 +652,8 @@ const file_aceteam_fabric_v1_node_state_proto_rawDesc = "" +
 	"config_ref\x18\x06 \x01(\tR\tconfigRef\x12\x14\n" +
 	"\x05error\x18\a \x01(\tR\x05error\x129\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x99\x02\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12?\n" +
+	"\tendpoints\x18\t \x03(\v2!.aceteam.fabric.v1.ModuleEndpointR\tendpoints\"\x99\x02\n" +
 	"\vActualState\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x17\n" +
 	"\anode_id\x18\x02 \x01(\tR\x06nodeId\x12)\n" +
@@ -549,32 +688,35 @@ func file_aceteam_fabric_v1_node_state_proto_rawDescGZIP() []byte {
 }
 
 var file_aceteam_fabric_v1_node_state_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_aceteam_fabric_v1_node_state_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_aceteam_fabric_v1_node_state_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_aceteam_fabric_v1_node_state_proto_goTypes = []any{
 	(ModuleStatus)(0),             // 0: aceteam.fabric.v1.ModuleStatus
 	(ModuleHealth)(0),             // 1: aceteam.fabric.v1.ModuleHealth
 	(*DesiredModule)(nil),         // 2: aceteam.fabric.v1.DesiredModule
 	(*DesiredState)(nil),          // 3: aceteam.fabric.v1.DesiredState
-	(*ActualModule)(nil),          // 4: aceteam.fabric.v1.ActualModule
-	(*ActualState)(nil),           // 5: aceteam.fabric.v1.ActualState
-	nil,                           // 6: aceteam.fabric.v1.DesiredModule.ConfigEntry
-	(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
+	(*ModuleEndpoint)(nil),        // 4: aceteam.fabric.v1.ModuleEndpoint
+	(*ActualModule)(nil),          // 5: aceteam.fabric.v1.ActualModule
+	(*ActualState)(nil),           // 6: aceteam.fabric.v1.ActualState
+	nil,                           // 7: aceteam.fabric.v1.DesiredModule.ConfigEntry
+	(*timestamppb.Timestamp)(nil), // 8: google.protobuf.Timestamp
 }
 var file_aceteam_fabric_v1_node_state_proto_depIdxs = []int32{
-	6, // 0: aceteam.fabric.v1.DesiredModule.config:type_name -> aceteam.fabric.v1.DesiredModule.ConfigEntry
-	0, // 1: aceteam.fabric.v1.DesiredModule.desired_status:type_name -> aceteam.fabric.v1.ModuleStatus
-	2, // 2: aceteam.fabric.v1.DesiredState.modules:type_name -> aceteam.fabric.v1.DesiredModule
-	7, // 3: aceteam.fabric.v1.DesiredState.issued_at:type_name -> google.protobuf.Timestamp
-	0, // 4: aceteam.fabric.v1.ActualModule.status:type_name -> aceteam.fabric.v1.ModuleStatus
-	1, // 5: aceteam.fabric.v1.ActualModule.health:type_name -> aceteam.fabric.v1.ModuleHealth
-	7, // 6: aceteam.fabric.v1.ActualModule.updated_at:type_name -> google.protobuf.Timestamp
-	4, // 7: aceteam.fabric.v1.ActualState.modules:type_name -> aceteam.fabric.v1.ActualModule
-	7, // 8: aceteam.fabric.v1.ActualState.reported_at:type_name -> google.protobuf.Timestamp
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	7,  // 0: aceteam.fabric.v1.DesiredModule.config:type_name -> aceteam.fabric.v1.DesiredModule.ConfigEntry
+	0,  // 1: aceteam.fabric.v1.DesiredModule.desired_status:type_name -> aceteam.fabric.v1.ModuleStatus
+	2,  // 2: aceteam.fabric.v1.DesiredState.modules:type_name -> aceteam.fabric.v1.DesiredModule
+	8,  // 3: aceteam.fabric.v1.DesiredState.issued_at:type_name -> google.protobuf.Timestamp
+	1,  // 4: aceteam.fabric.v1.ModuleEndpoint.health:type_name -> aceteam.fabric.v1.ModuleHealth
+	0,  // 5: aceteam.fabric.v1.ActualModule.status:type_name -> aceteam.fabric.v1.ModuleStatus
+	1,  // 6: aceteam.fabric.v1.ActualModule.health:type_name -> aceteam.fabric.v1.ModuleHealth
+	8,  // 7: aceteam.fabric.v1.ActualModule.updated_at:type_name -> google.protobuf.Timestamp
+	4,  // 8: aceteam.fabric.v1.ActualModule.endpoints:type_name -> aceteam.fabric.v1.ModuleEndpoint
+	5,  // 9: aceteam.fabric.v1.ActualState.modules:type_name -> aceteam.fabric.v1.ActualModule
+	8,  // 10: aceteam.fabric.v1.ActualState.reported_at:type_name -> google.protobuf.Timestamp
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_aceteam_fabric_v1_node_state_proto_init() }
@@ -588,7 +730,7 @@ func file_aceteam_fabric_v1_node_state_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_aceteam_fabric_v1_node_state_proto_rawDesc), len(file_aceteam_fabric_v1_node_state_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
