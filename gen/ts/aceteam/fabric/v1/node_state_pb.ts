@@ -19,7 +19,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file aceteam/fabric/v1/node_state.proto.
  */
 export const file_aceteam_fabric_v1_node_state: GenFile = /*@__PURE__*/
-  fileDesc("CiJhY2V0ZWFtL2ZhYnJpYy92MS9ub2RlX3N0YXRlLnByb3RvEhFhY2V0ZWFtLmZhYnJpYy52MSLzAQoNRGVzaXJlZE1vZHVsZRIOCgZzb3VyY2UYASABKAkSEgoKY29uZmlnX3JlZhgCIAEoCRI8CgZjb25maWcYAyADKAsyLC5hY2V0ZWFtLmZhYnJpYy52MS5EZXNpcmVkTW9kdWxlLkNvbmZpZ0VudHJ5EjcKDmRlc2lyZWRfc3RhdHVzGAQgASgOMh8uYWNldGVhbS5mYWJyaWMudjEuTW9kdWxlU3RhdHVzEhgKEGFsbG93X3ByaXZpbGVnZWQYBSABKAgaLQoLQ29uZmlnRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKtAQoMRGVzaXJlZFN0YXRlEhgKEHByb3RvY29sX3ZlcnNpb24YASABKA0SDwoHbm9kZV9pZBgCIAEoCRIQCghyZXZpc2lvbhgDIAEoCRIxCgdtb2R1bGVzGAQgAygLMiAuYWNldGVhbS5mYWJyaWMudjEuRGVzaXJlZE1vZHVsZRItCglpc3N1ZWRfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIoQCCgxBY3R1YWxNb2R1bGUSDgoGc291cmNlGAEgASgJEhkKEWluc3RhbGxlZF92ZXJzaW9uGAIgASgJEhQKDGltYWdlX2RpZ2VzdBgDIAEoCRIvCgZzdGF0dXMYBCABKA4yHy5hY2V0ZWFtLmZhYnJpYy52MS5Nb2R1bGVTdGF0dXMSLwoGaGVhbHRoGAUgASgOMh8uYWNldGVhbS5mYWJyaWMudjEuTW9kdWxlSGVhbHRoEhIKCmNvbmZpZ19yZWYYBiABKAkSDQoFZXJyb3IYByABKAkSLgoKdXBkYXRlZF9hdBgIIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAizAEKC0FjdHVhbFN0YXRlEhgKEHByb3RvY29sX3ZlcnNpb24YASABKA0SDwoHbm9kZV9pZBgCIAEoCRIYChBhcHBsaWVkX3JldmlzaW9uGAMgASgJEhUKDWFnZW50X3ZlcnNpb24YBCABKAkSMAoHbW9kdWxlcxgFIAMoCzIfLmFjZXRlYW0uZmFicmljLnYxLkFjdHVhbE1vZHVsZRIvCgtyZXBvcnRlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAqfQoMTW9kdWxlU3RhdHVzEh0KGU1PRFVMRV9TVEFUVVNfVU5TUEVDSUZJRUQQABIZChVNT0RVTEVfU1RBVFVTX1JVTk5JTkcQARIZChVNT0RVTEVfU1RBVFVTX1NUT1BQRUQQAhIYChRNT0RVTEVfU1RBVFVTX0FCU0VOVBADKpoBCgxNb2R1bGVIZWFsdGgSHQoZTU9EVUxFX0hFQUxUSF9VTlNQRUNJRklFRBAAEhkKFU1PRFVMRV9IRUFMVEhfSEVBTFRIWRABEhoKFk1PRFVMRV9IRUFMVEhfU1RBUlRJTkcQAhIbChdNT0RVTEVfSEVBTFRIX1VOSEVBTFRIWRADEhcKE01PRFVMRV9IRUFMVEhfRVJST1IQBELWAQoVY29tLmFjZXRlYW0uZmFicmljLnYxQg5Ob2RlU3RhdGVQcm90b1ABWkdnaXRodWIuY29tL2FjZXRlYW0tYWkvZmFicmljLXByb3RvY29sL2dlbi9nby9hY2V0ZWFtL2ZhYnJpYy92MTtmYWJyaWN2MaICA0FGWKoCEUFjZXRlYW0uRmFicmljLlYxygIRQWNldGVhbVxGYWJyaWNcVjHiAh1BY2V0ZWFtXEZhYnJpY1xWMVxHUEJNZXRhZGF0YeoCE0FjZXRlYW06OkZhYnJpYzo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+  fileDesc("CiJhY2V0ZWFtL2ZhYnJpYy92MS9ub2RlX3N0YXRlLnByb3RvEhFhY2V0ZWFtLmZhYnJpYy52MSLzAQoNRGVzaXJlZE1vZHVsZRIOCgZzb3VyY2UYASABKAkSEgoKY29uZmlnX3JlZhgCIAEoCRI8CgZjb25maWcYAyADKAsyLC5hY2V0ZWFtLmZhYnJpYy52MS5EZXNpcmVkTW9kdWxlLkNvbmZpZ0VudHJ5EjcKDmRlc2lyZWRfc3RhdHVzGAQgASgOMh8uYWNldGVhbS5mYWJyaWMudjEuTW9kdWxlU3RhdHVzEhgKEGFsbG93X3ByaXZpbGVnZWQYBSABKAgaLQoLQ29uZmlnRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKtAQoMRGVzaXJlZFN0YXRlEhgKEHByb3RvY29sX3ZlcnNpb24YASABKA0SDwoHbm9kZV9pZBgCIAEoCRIQCghyZXZpc2lvbhgDIAEoCRIxCgdtb2R1bGVzGAQgAygLMiAuYWNldGVhbS5mYWJyaWMudjEuRGVzaXJlZE1vZHVsZRItCglpc3N1ZWRfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIr0BCg5Nb2R1bGVFbmRwb2ludBIMCgRuYW1lGAEgASgJEgwKBGtpbmQYAiABKAkSDgoGc2NoZW1lGAMgASgJEgwKBHBvcnQYBCABKA0SDAoEcGF0aBgFIAEoCRIvCgZoZWFsdGgYBiABKA4yHy5hY2V0ZWFtLmZhYnJpYy52MS5Nb2R1bGVIZWFsdGgSEwoLaGVhbHRoX3BhdGgYByABKAkSHQoVYWRtaW5fa2V5X2ZpbmdlcnByaW50GAggASgJIroCCgxBY3R1YWxNb2R1bGUSDgoGc291cmNlGAEgASgJEhkKEWluc3RhbGxlZF92ZXJzaW9uGAIgASgJEhQKDGltYWdlX2RpZ2VzdBgDIAEoCRIvCgZzdGF0dXMYBCABKA4yHy5hY2V0ZWFtLmZhYnJpYy52MS5Nb2R1bGVTdGF0dXMSLwoGaGVhbHRoGAUgASgOMh8uYWNldGVhbS5mYWJyaWMudjEuTW9kdWxlSGVhbHRoEhIKCmNvbmZpZ19yZWYYBiABKAkSDQoFZXJyb3IYByABKAkSLgoKdXBkYXRlZF9hdBgIIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASNAoJZW5kcG9pbnRzGAkgAygLMiEuYWNldGVhbS5mYWJyaWMudjEuTW9kdWxlRW5kcG9pbnQizAEKC0FjdHVhbFN0YXRlEhgKEHByb3RvY29sX3ZlcnNpb24YASABKA0SDwoHbm9kZV9pZBgCIAEoCRIYChBhcHBsaWVkX3JldmlzaW9uGAMgASgJEhUKDWFnZW50X3ZlcnNpb24YBCABKAkSMAoHbW9kdWxlcxgFIAMoCzIfLmFjZXRlYW0uZmFicmljLnYxLkFjdHVhbE1vZHVsZRIvCgtyZXBvcnRlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAqfQoMTW9kdWxlU3RhdHVzEh0KGU1PRFVMRV9TVEFUVVNfVU5TUEVDSUZJRUQQABIZChVNT0RVTEVfU1RBVFVTX1JVTk5JTkcQARIZChVNT0RVTEVfU1RBVFVTX1NUT1BQRUQQAhIYChRNT0RVTEVfU1RBVFVTX0FCU0VOVBADKpoBCgxNb2R1bGVIZWFsdGgSHQoZTU9EVUxFX0hFQUxUSF9VTlNQRUNJRklFRBAAEhkKFU1PRFVMRV9IRUFMVEhfSEVBTFRIWRABEhoKFk1PRFVMRV9IRUFMVEhfU1RBUlRJTkcQAhIbChdNT0RVTEVfSEVBTFRIX1VOSEVBTFRIWRADEhcKE01PRFVMRV9IRUFMVEhfRVJST1IQBELWAQoVY29tLmFjZXRlYW0uZmFicmljLnYxQg5Ob2RlU3RhdGVQcm90b1ABWkdnaXRodWIuY29tL2FjZXRlYW0tYWkvZmFicmljLXByb3RvY29sL2dlbi9nby9hY2V0ZWFtL2ZhYnJpYy92MTtmYWJyaWN2MaICA0FGWKoCEUFjZXRlYW0uRmFicmljLlYxygIRQWNldGVhbVxGYWJyaWNcVjHiAh1BY2V0ZWFtXEZhYnJpY1xWMVxHUEJNZXRhZGF0YeoCE0FjZXRlYW06OkZhYnJpYzo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message aceteam.fabric.v1.DesiredModule
@@ -111,6 +111,89 @@ export const DesiredStateSchema: GenMessage<DesiredState> = /*@__PURE__*/
   messageDesc(file_aceteam_fabric_v1_node_state, 1);
 
 /**
+ * ModuleEndpoint is a network surface a module exposes on this node (citadel#624
+ * Phase A) -- e.g. a gateway route to a bridge's REST control plane. Additive,
+ * proto3-optional-free: every field defaults harmlessly to its zero value, so
+ * this is a backward-compatible wire addition (no FabricProtocolVersion bump).
+ *
+ * Deliberately carries NO secret material. `admin_key_fingerprint` is a
+ * one-way digest for change-over-time drift detection only -- see its field
+ * comment; the control plane never receives (and cannot recover) the key
+ * itself from this message.
+ *
+ * @generated from message aceteam.fabric.v1.ModuleEndpoint
+ */
+export type ModuleEndpoint = Message<"aceteam.fabric.v1.ModuleEndpoint"> & {
+  /**
+   * endpoint identity within the module, e.g. "admin"
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * e.g. "rest", "grpc" -- informational, not enforced
+   *
+   * @generated from field: string kind = 2;
+   */
+  kind: string;
+
+  /**
+   * "http" | "https"
+   *
+   * @generated from field: string scheme = 3;
+   */
+  scheme: string;
+
+  /**
+   * 0 = declared but not yet deployed (no live upstream yet)
+   *
+   * @generated from field: uint32 port = 4;
+   */
+  port: number;
+
+  /**
+   * route path prefix the endpoint is reachable under
+   *
+   * @generated from field: string path = 5;
+   */
+  path: string;
+
+  /**
+   * observed health of THIS endpoint specifically
+   *
+   * @generated from field: aceteam.fabric.v1.ModuleHealth health = 6;
+   */
+  health: ModuleHealth;
+
+  /**
+   * path used to probe health, if any
+   *
+   * @generated from field: string health_path = 7;
+   */
+  healthPath: string;
+
+  /**
+   * admin_key_fingerprint is `sha256:<first-16-hex-chars>` of SHA-256(admin
+   * key), or "" when no key is on disk. It is NEVER the hash of an empty
+   * string -- an absent key means an absent fingerprint. The control plane
+   * never learns the underlying key from this field (it is not sent anywhere
+   * else either), so this supports detecting THAT the key changed over time,
+   * not verifying it against a platform-held copy.
+   *
+   * @generated from field: string admin_key_fingerprint = 8;
+   */
+  adminKeyFingerprint: string;
+};
+
+/**
+ * Describes the message aceteam.fabric.v1.ModuleEndpoint.
+ * Use `create(ModuleEndpointSchema)` to create a new message.
+ */
+export const ModuleEndpointSchema: GenMessage<ModuleEndpoint> = /*@__PURE__*/
+  messageDesc(file_aceteam_fabric_v1_node_state, 2);
+
+/**
  * @generated from message aceteam.fabric.v1.ActualModule
  */
 export type ActualModule = Message<"aceteam.fabric.v1.ActualModule"> & {
@@ -164,6 +247,17 @@ export type ActualModule = Message<"aceteam.fabric.v1.ActualModule"> & {
    * @generated from field: google.protobuf.Timestamp updated_at = 8;
    */
   updatedAt?: Timestamp | undefined;
+
+  /**
+   * endpoints lists this module's exposed network surfaces (citadel#624 Phase
+   * A). Empty for a module with no declared endpoints (the common case
+   * today). A module with no lockfile entry (e.g. a bridge deployed outside
+   * the module system) can still appear here as a synthetic row keyed by
+   * `source` purely to carry its endpoints -- see the citadel-cli emitter.
+   *
+   * @generated from field: repeated aceteam.fabric.v1.ModuleEndpoint endpoints = 9;
+   */
+  endpoints: ModuleEndpoint[];
 };
 
 /**
@@ -171,7 +265,7 @@ export type ActualModule = Message<"aceteam.fabric.v1.ActualModule"> & {
  * Use `create(ActualModuleSchema)` to create a new message.
  */
 export const ActualModuleSchema: GenMessage<ActualModule> = /*@__PURE__*/
-  messageDesc(file_aceteam_fabric_v1_node_state, 2);
+  messageDesc(file_aceteam_fabric_v1_node_state, 3);
 
 /**
  * @generated from message aceteam.fabric.v1.ActualState
@@ -220,7 +314,7 @@ export type ActualState = Message<"aceteam.fabric.v1.ActualState"> & {
  * Use `create(ActualStateSchema)` to create a new message.
  */
 export const ActualStateSchema: GenMessage<ActualState> = /*@__PURE__*/
-  messageDesc(file_aceteam_fabric_v1_node_state, 3);
+  messageDesc(file_aceteam_fabric_v1_node_state, 4);
 
 /**
  * @generated from enum aceteam.fabric.v1.ModuleStatus

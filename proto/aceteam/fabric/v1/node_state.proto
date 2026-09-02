@@ -57,6 +57,32 @@ enum ModuleHealth {
   MODULE_HEALTH_ERROR = 4; // converge/install failed -- see `error`
 }
 
+// ModuleEndpoint is a network surface a module exposes on this node (citadel#624
+// Phase A) -- e.g. a gateway route to a bridge's REST control plane. Additive,
+// proto3-optional-free: every field defaults harmlessly to its zero value, so
+// this is a backward-compatible wire addition (no FabricProtocolVersion bump).
+//
+// Deliberately carries NO secret material. `admin_key_fingerprint` is a
+// one-way digest for change-over-time drift detection only -- see its field
+// comment; the control plane never receives (and cannot recover) the key
+// itself from this message.
+message ModuleEndpoint {
+  string name = 1; // endpoint identity within the module, e.g. "admin"
+  string kind = 2; // e.g. "rest", "grpc" -- informational, not enforced
+  string scheme = 3; // "http" | "https"
+  uint32 port = 4; // 0 = declared but not yet deployed (no live upstream yet)
+  string path = 5; // route path prefix the endpoint is reachable under
+  ModuleHealth health = 6; // observed health of THIS endpoint specifically
+  string health_path = 7; // path used to probe health, if any
+  // admin_key_fingerprint is `sha256:<first-16-hex-chars>` of SHA-256(admin
+  // key), or "" when no key is on disk. It is NEVER the hash of an empty
+  // string -- an absent key means an absent fingerprint. The control plane
+  // never learns the underlying key from this field (it is not sent anywhere
+  // else either), so this supports detecting THAT the key changed over time,
+  // not verifying it against a platform-held copy.
+  string admin_key_fingerprint = 8;
+}
+
 message ActualModule {
   string source = 1;
   string installed_version = 2; // resolved version/ref actually installed
@@ -68,6 +94,12 @@ message ActualModule {
   // blocking the rest of the report.
   string error = 7;
   google.protobuf.Timestamp updated_at = 8;
+  // endpoints lists this module's exposed network surfaces (citadel#624 Phase
+  // A). Empty for a module with no declared endpoints (the common case
+  // today). A module with no lockfile entry (e.g. a bridge deployed outside
+  // the module system) can still appear here as a synthetic row keyed by
+  // `source` purely to carry its endpoints -- see the citadel-cli emitter.
+  repeated ModuleEndpoint endpoints = 9;
 }
 
 message ActualState {
